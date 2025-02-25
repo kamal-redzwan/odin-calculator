@@ -1,5 +1,9 @@
 //  <---------- Declaration of Variables ---------->
 
+let currentInput = '';
+let previousInput = '';
+let currentOperation = '';
+
 const numberButtons = document.querySelectorAll("[data-type='number']");
 const operationButtons = document.querySelectorAll("[data-type='operation']");
 const calculateButton = document.querySelector("[data-type='calculate']");
@@ -46,9 +50,58 @@ function multiply(val1, val2) {
 
 //  <---------- Buttons Functions ---------->
 
-function appendNumberToInputDisplay() {}
-function setOperation() {}
+function appendNumberToInputDisplay(number) {
+  // Prevent multiple zeros at the beginning
+  if (number === 0 && currentInput === 0) return;
+
+  // Add the number input
+  currentInput += number;
+
+  // Update the display
+  resultDisplay.value = currentInput;
+}
+
+function setOperation(operation) {
+  // Dont set operation if no input
+  if (currentInput === '') return;
+
+  // If we already have a previous input, perform the calculation
+  if (previousInput !== '') evaluate();
+
+  // Save current input and operation
+  previousInput = currentInput;
+  currentOperation = operation;
+
+  // Show operation input display
+  inputDisplay.value = previousInput + ' ' + currentOperation;
+
+  // Reset current input for next number
+  currentInput = '';
+}
+
 function evaluate() {}
-function addDecimal() {}
-function clearDisplay() {}
-function deleteNumber() {}
+
+function addDecimal() {
+  // Dont add decimal if there's one
+  if (currentInput.includes('.')) return;
+
+  // Add 0 if the input is empty
+  if (currentInput === '') currentInput = '0';
+
+  currentInput += '.';
+  resultDisplay.value = currentInput;
+}
+
+function clearDisplay() {
+  currentInput = '';
+  previousInput = '';
+  currentOperation = '';
+  inputDisplay.value = '';
+  resultDisplay.value = '';
+}
+
+function deleteNumber() {
+  // Delete the last input number
+  currentInput = currentInput.toString().slice(0, -1);
+  resultDisplay.value = currentInput;
+}
