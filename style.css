@@ -45,13 +45,13 @@ input[type='text'] {
   outline: none;
 }
 
-.display__input {
+#display__input {
   font-size: 0.8rem;
   color: #ccc;
   margin-bottom: 0.5rem;
 }
 
-.display__results {
+#display__result {
   font-size: 1.5rem;
 }
 
@@ -81,6 +81,10 @@ button {
 
 button:hover {
   opacity: 0.8;
+}
+
+button:active {
+  transform: scale(0.9);
 }
 
 .number-input,
