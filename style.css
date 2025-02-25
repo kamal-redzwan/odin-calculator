@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Space Mono', serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+main {
+  width: 320px;
+  padding: 1.8rem;
+  border-radius: 1rem;
+  background-color: #333;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Display Styles */
+.display__wrapper {
+  background-color: #222;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+input[type='text'] {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  text-align: right;
+  outline: none;
+}
+
+.display__input {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.display__results {
+  font-size: 1.5rem;
+}
+
+/* Button Styles */
+.buttons__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.buttons__row {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: space-between;
+}
+
+button {
+  width: 100%;
+  padding: 1rem 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: 0.3s;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.number-input,
+.point-input {
+  background-color: #444;
+}
+
+.operation-input {
+  background-color: #ff9500;
+}
+
+.clear-input,
+.delete-input {
+  background-color: #a5a5a5;
+  color: black;
+}
+
+.clear-input {
+  width: 100%;
+}
+
+.equals-input {
+  background-color: #4caf50;
+  color: white;
+}
