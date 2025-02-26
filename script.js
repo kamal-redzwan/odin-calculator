@@ -1,3 +1,10 @@
+// TODO:
+// - Keyboard input
+// - Error handling (floating point precision)
+// - Error handling (error state management)
+// - Error handling (input length limit to prevent overflow numbers)
+// - Visual feedback for errors handling
+
 //  <---------- Declaration of Variables ---------->
 
 let currentInput = '';
@@ -52,7 +59,7 @@ function multiply(val1, val2) {
 
 function appendNumberToInputDisplay(number) {
   // Prevent multiple zeros at the beginning
-  if (number === 0 && currentInput === 0) return;
+  if (number === '0' && currentInput === '0') return;
 
   // Add the number input
   currentInput += number;
@@ -79,7 +86,54 @@ function setOperation(operation) {
   currentInput = '';
 }
 
-function evaluate() {}
+function evaluate() {
+  // Dont calculate if missing input or operator
+  if (previousInput === '' || currentInput === '' || currentOperation === '')
+    return;
+
+  // Convert inputs to numbers
+  const prev = parseFloat(previousInput);
+  const current = parseFloat(currentInput);
+
+  // Check for invalid inputs
+  if (isNaN(prev) || isNaN(current)) return;
+
+  // Calculate result based on operation
+  let result;
+  switch (currentOperation) {
+    case '+':
+      result = add(prev, current);
+      break;
+    case '-':
+      result = subtract(prev, current);
+      break;
+    case '×':
+    case '&times;':
+      result = multiply(prev, current);
+      break;
+    case '÷':
+    case '&divide;':
+      // Check for division by zero
+      if (current === 0) {
+        resultDisplay.value = `Cannot divide by 0`;
+        return;
+      }
+      result = divide(prev, current);
+      break;
+    default:
+      return;
+  }
+
+  // Update displays
+  inputDisplay.value =
+    previousInput + ' ' + currentOperation + ' ' + currentInput + ' = ';
+  resultDisplay.value = result;
+
+  // Reset for next calculation
+  currentInput = result.toString();
+  previousInput = '';
+  currentOperation = '';
+}
 
 function addDecimal() {
   // Dont add decimal if there's one
