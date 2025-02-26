@@ -1,9 +1,9 @@
 // TODO:
-// - Keyboard input
-// - Error handling (floating point precision)
-// - Error handling (error state management)
+// - Error handling (floating point precision) ✅
 // - Error handling (input length limit to prevent overflow numbers)
+// - Error handling (error state management)
 // - Visual feedback for errors handling
+// - Keyboard input
 
 //  <---------- Declaration of Variables ---------->
 
@@ -127,7 +127,7 @@ function evaluate() {
   // Update displays
   inputDisplay.value =
     previousInput + ' ' + currentOperation + ' ' + currentInput + ' = ';
-  resultDisplay.value = result;
+  resultDisplay.value = formatNumber(result);
 
   // Reset for next calculation
   currentInput = result.toString();
@@ -158,4 +158,12 @@ function deleteNumber() {
   // Delete the last input number
   currentInput = currentInput.toString().slice(0, -1);
   resultDisplay.value = currentInput;
+}
+
+function formatNumber(number) {
+  // Round to reasonable precision to avoid floating point issues
+  const rounded = Number(number.toFixed(10));
+
+  // Use toString() to convert to a string without trailing zeros
+  return rounded.toString();
 }
