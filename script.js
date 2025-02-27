@@ -84,6 +84,9 @@ function setOperation(operation) {
   // If we already have a previous input, perform the calculation
   if (previousInput !== '') evaluate();
 
+  // Trim the operation to remove extra spaces
+  operation = operation.trim();
+
   // Save current input and operation
   previousInput = currentInput;
   currentOperation = operation;
@@ -94,7 +97,7 @@ function setOperation(operation) {
   }
 
   // Show operation input display
-  inputDisplay.value = previousInput + ' ' + currentOperation;
+  inputDisplay.value = `${previousInput} ${currentOperation}`;
 
   // Reset current input for next number
   currentInput = '';
