@@ -1,11 +1,14 @@
 // TODO:
 // - Error handling (floating point precision) ✅
-// - Error handling (input length limit to prevent overflow numbers)
+// - Error handling (input length limit to prevent overflow numbers) ✅
 // - Error handling (error state management)
 // - Visual feedback for errors handling
 // - Keyboard input
 
-//  <---------- Declaration of Variables ---------->
+//  <---------- Declaration of Variables & Constant ---------->
+
+const MAX_INPUT_LENGTH = 16;
+const MAX_TOTAL_LENGTH = 20;
 
 let currentInput = '';
 let previousInput = '';
@@ -58,6 +61,12 @@ function multiply(val1, val2) {
 //  <---------- Buttons Functions ---------->
 
 function appendNumberToInputDisplay(number) {
+  // Check if input is at max length
+  if (currentInput.length >= MAX_INPUT_LENGTH) {
+    flashInputWarning();
+    return;
+  }
+
   // Prevent multiple zeros at the beginning
   if (number === '0' && currentInput === '0') return;
 
@@ -78,6 +87,11 @@ function setOperation(operation) {
   // Save current input and operation
   previousInput = currentInput;
   currentOperation = operation;
+
+  // If the previous input is too large, conver to scientific notation
+  if (previousInput.length > MAX_INPUT_LENGTH) {
+    previousInput = convertToScientificNotation(previousInput);
+  }
 
   // Show operation input display
   inputDisplay.value = previousInput + ' ' + currentOperation;
@@ -124,10 +138,16 @@ function evaluate() {
       return;
   }
 
+  // Check if result exceeds maximum display length
+  let resultString = formatNumber(result);
+  if (resultString.length > MAX_TOTAL_LENGTH) {
+    resultString = convertToScientificNotation(result);
+  }
+
   // Update displays
   inputDisplay.value =
     previousInput + ' ' + currentOperation + ' ' + currentInput + ' = ';
-  resultDisplay.value = formatNumber(result);
+  resultDisplay.value = resultString;
 
   // Reset for next calculation
   currentInput = result.toString();
@@ -160,10 +180,38 @@ function deleteNumber() {
   resultDisplay.value = currentInput;
 }
 
+//  <---------- Helper Functions ---------->
+
 function formatNumber(number) {
+  // Check if number is too large or small
+  if (Math.abs(number) > 1e15 || (Math.abs(number) < 1e-10 && number !== 0)) {
+    return convertToScientificNotation(number);
+  }
+
   // Round to reasonable precision to avoid floating point issues
   const rounded = Number(number.toFixed(10));
 
-  // Use toString() to convert to a string without trailing zeros
-  return rounded.toString();
+  // Remove trailing zeros
+  let resultString = rounded.toString();
+
+  // Truncate if still too long after formatting
+  if (resultString.length > MAX_TOTAL_LENGTH) {
+    return convertToScientificNotation(number);
+  }
+
+  return resultString;
+}
+
+function flashInputWarning() {
+  // Temporarily change the display style to indicate limit reached
+  resultDisplay.classList.add('input-limit-reached');
+
+  // Remove the warning style after a shot delay
+  setTimeout(() => {
+    resultDisplay.classList.remove('input-limit-reached');
+  }, 300);
+}
+
+function convertToScientificNotation(number) {
+  return number.toExponential(10);
 }
