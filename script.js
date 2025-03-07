@@ -3,7 +3,7 @@
 // - Error handling (input length limit to prevent overflow numbers) ✅
 // - Error handling (error state management) ✅
 // - Visual feedback for errors handling ✅
-// - Keyboard input
+// - Keyboard input ✅
 
 //  <---------- Declaration of Variables & Constant ---------->
 
@@ -14,7 +14,7 @@ const MAX_TOTAL_LENGTH = 20;
 const ERROR_STATES = {
   DIVISION_BY_ZERO: 'Cannot divide by 0',
   OVERFLOW: 'Number too large',
-  INVALID_INPUT: 'Invalid input'
+  INVALID_INPUT: 'Invalid input',
 };
 
 let currentInput = '';
@@ -47,6 +47,9 @@ calculateButton.addEventListener('click', evaluate);
 decimalButton.addEventListener('click', addDecimal);
 clearButton.addEventListener('click', clearDisplay);
 deleteButton.addEventListener('click', deleteNumber);
+
+// Add keyboard support
+document.addEventListener('keydown', handleKeyboardInput);
 
 //  <---------- Math Functions ---------->
 
@@ -96,7 +99,7 @@ function setOperation(operation) {
     clearDisplay();
     return;
   }
-  
+
   if (currentInput === '') return;
 
   // If we already have a previous input, perform the calculation
@@ -195,7 +198,7 @@ function evaluate() {
   } catch (error) {
     // Handle any unexpected errors
     displayError(ERROR_STATES.INVALID_INPUT);
-    console.error("Calculation error:", error);
+    console.error('Calculation error:', error);
   }
 }
 
@@ -221,7 +224,7 @@ function clearDisplay() {
   currentOperation = '';
   inputDisplay.value = '';
   resultDisplay.value = '';
-  
+
   // Clear any error state
   isError = false;
   resultDisplay.classList.remove('error-state');
@@ -233,7 +236,7 @@ function deleteNumber() {
     clearDisplay();
     return;
   }
-  
+
   // Delete the last input number
   currentInput = currentInput.toString().slice(0, -1);
   resultDisplay.value = currentInput;
@@ -274,15 +277,72 @@ function flashInputWarning() {
 function displayError(errorMessage) {
   // Set error flag
   isError = true;
-  
+
   // Display error message
   resultDisplay.value = errorMessage;
   resultDisplay.classList.add('error-state');
-  
+
   // Clear the operation display
   inputDisplay.value = 'Error';
 }
 
 function convertToScientificNotation(number) {
   return number.toExponential(10);
+}
+
+//  <---------- Keyboard Support ---------->
+
+function handleKeyboardInput(event) {
+  // Prevent default behavior for calculator keys to avoid browser shortcuts
+  if (
+    (event.key >= '0' && event.key <= '9') ||
+    event.key === '.' ||
+    event.key === '+' ||
+    event.key === '-' ||
+    event.key === '*' ||
+    event.key === '/' ||
+    event.key === 'Enter' ||
+    event.key === '=' ||
+    event.key === 'Escape' ||
+    event.key === 'Backspace' ||
+    event.key === 'Delete'
+  ) {
+    event.preventDefault();
+  }
+
+  // Number keys (0-9)
+  if (event.key >= '0' && event.key <= '9') {
+    appendNumberToInputDisplay(event.key);
+  }
+
+  // Decimal point
+  else if (event.key === '.') {
+    addDecimal();
+  }
+
+  // Operators
+  else if (event.key === '+') {
+    setOperation('+');
+  } else if (event.key === '-') {
+    setOperation('-');
+  } else if (event.key === '*') {
+    setOperation('×');
+  } else if (event.key === '/') {
+    setOperation('÷');
+  }
+
+  // Calculate (Enter or =)
+  else if (event.key === 'Enter' || event.key === '=') {
+    evaluate();
+  }
+
+  // Clear (Escape)
+  else if (event.key === 'Escape') {
+    clearDisplay();
+  }
+
+  // Delete/Backspace
+  else if (event.key === 'Backspace' || event.key === 'Delete') {
+    deleteNumber();
+  }
 }
